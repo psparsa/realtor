@@ -49,11 +49,13 @@ enum UserType {
 }
 
 model User {
-  id               Int       @id @default(autoincrement())
-  name             String
-  phone            String
-  email            String
-  password         String
+  id Int @id @default(autoincrement())
+
+  name     String
+  phone    String
+  email    String @unique
+  password String
+
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt
   userType         UserType
