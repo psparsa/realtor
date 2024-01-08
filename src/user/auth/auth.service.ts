@@ -3,6 +3,7 @@ import { SignUpDTO } from './auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { UserType } from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +31,17 @@ export class AuthService {
       },
     });
 
-    return createdUser;
+    const token = jwt.sign(
+      {
+        name,
+        id: createdUser.id,
+      },
+      process.env.JSON_TOKEN_KEY,
+      { expiresIn: 60 * 60 },
+    );
+
+    return {
+      token,
+    };
   }
 }
