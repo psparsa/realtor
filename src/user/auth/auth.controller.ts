@@ -33,7 +33,7 @@ export class AuthController {
       if (!isValidProductKey) throw new UnauthorizedException();
     }
 
-    return this.authService.signup(body);
+    return this.authService.signup(body, userType);
   }
 
   @Post('/signin')
