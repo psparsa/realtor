@@ -10,13 +10,3 @@ import { PrismaModule } from './prisma/prisma.module';
   providers: [AppService],
 })
 export class AppModule {}
-
-/* SignUp
-    1. Validate input
-    2. Check email duplication
-    3. Hash the password
-    4. store user information in database
- */
-
-// signin
-// me
