@@ -39,7 +39,22 @@ export class HomeResponseDTO {
 
   realtor_id: number;
 
+  @Exclude()
+  images: { url: string }[];
+
+  @Expose({ name: 'image' })
+  getImage() {
+    return this.images[0]?.url ?? null;
+  }
+
   constructor(partial: Partial<HomeResponseDTO>) {
     Object.assign(this, partial);
   }
 }
+
+export type HomeFilters = {
+  city?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  propertyType?: string;
+};
