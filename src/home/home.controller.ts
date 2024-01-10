@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -9,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
+import { CreateHomeDTO } from './home.dto';
 
 @Controller('home')
 export class HomeController {
@@ -36,8 +38,8 @@ export class HomeController {
   }
 
   @Post()
-  createHome() {
-    return {};
+  createHome(@Body() body: CreateHomeDTO) {
+    return this.homeService.createHome(body);
   }
 
   @Put(':id')

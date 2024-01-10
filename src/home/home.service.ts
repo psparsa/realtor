@@ -2,6 +2,18 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeFilters, HomeResponseDTO } from './home.dto';
 import _ from 'lodash/fp';
+import { PropertyType } from '@prisma/client';
+
+type CreateHomeParameters = {
+  address: string;
+  city: string;
+  landSize: number;
+  numberOfBathrooms: number;
+  numberOfBedrooms: number;
+  price: number;
+  propertyType: PropertyType;
+  images: Array<Record<'url', string>>;
+};
 
 @Injectable()
 export class HomeService {
@@ -54,5 +66,29 @@ export class HomeService {
 
     if (home) return home;
     throw new NotFoundException();
+  }
+
+  async createHome(data: CreateHomeParameters) {
+    const home = await this.prismaService.home.create({
+      data: {
+        address: data.address,
+        city: data.city,
+        land_size: data.landSize,
+        number_of_bathrooms: data.numberOfBathrooms,
+        number_of_bedrooms: data.numberOfBedrooms,
+        price: data.price,
+        propertyType: data.propertyType,
+        realtor_id: 10,
+      },
+    });
+
+    const images = await this.prismaService.image.create({
+      data: {
+        url: data.images[0].url,
+        home_id: home.id,
+      },
+    });
+
+    return new HomeResponseDTO({ ...home, images: [{ url: images.url }] });
   }
 }
