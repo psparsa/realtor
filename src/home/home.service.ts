@@ -44,4 +44,15 @@ export class HomeService {
 
     return homes.map((home) => new HomeResponseDTO(home));
   }
+
+  async getHome(id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (home) return home;
+    throw new NotFoundException();
+  }
 }

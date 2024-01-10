@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { HomeService } from './home.service';
 
 @Controller('home')
@@ -13,8 +22,6 @@ export class HomeController {
     @Query('maxPrice') maxPrice?: string,
     @Query('propertyType') propertyType?: string,
   ) {
-    console.log({ city, minPrice, maxPrice, propertyType });
-
     return this.homeService.getHomes({
       city,
       maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
@@ -24,8 +31,8 @@ export class HomeController {
   }
 
   @Get(':id')
-  getHome() {
-    return {};
+  getHome(@Param('id', ParseIntPipe) id: number) {
+    return this.homeService.getHome(id);
   }
 
   @Post()
