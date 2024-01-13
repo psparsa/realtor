@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDTO, UpdateHomeDTO } from './home.dto';
-import { User, UserType } from 'src/user/user.decorator';
+import { User, UserInfo } from 'src/user/user.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -40,7 +40,7 @@ export class HomeController {
   }
 
   @Post()
-  createHome(@Body() body: CreateHomeDTO, @User() user: UserType) {
+  createHome(@Body() body: CreateHomeDTO, @User() user: UserInfo) {
     return this.homeService.createHome(body, user.id);
   }
 
@@ -48,7 +48,7 @@ export class HomeController {
   async updateHome(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHomeDTO,
-    @User() user: UserType,
+    @User() user: UserInfo,
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
     if (realtor.id !== user.id) throw new UnauthorizedException();
@@ -58,7 +58,7 @@ export class HomeController {
   @Delete(':id')
   async deleteHome(
     @Param('id', ParseIntPipe) id: number,
-    @User() user: UserType,
+    @User() user: UserInfo,
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
     if (realtor.id !== user.id) throw new UnauthorizedException();
