@@ -120,4 +120,28 @@ export class HomeService {
 
     return new HomeResponseDTO(updatedHome);
   }
+
+  async deleteHomeById(id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!home) throw new NotFoundException();
+
+    await this.prismaService.image.deleteMany({
+      where: {
+        home_id: id,
+      },
+    });
+
+    await this.prismaService.home.delete({
+      where: {
+        id,
+      },
+    });
+
+    return 'Deleted';
+  }
 }
