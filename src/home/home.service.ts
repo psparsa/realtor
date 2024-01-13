@@ -144,4 +144,16 @@ export class HomeService {
 
     return 'Deleted';
   }
+
+  async getRealtorByHomeId(id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: { id },
+      select: {
+        realtor: true,
+      },
+    });
+
+    if (!home) throw new NotFoundException();
+    return home.realtor;
+  }
 }
