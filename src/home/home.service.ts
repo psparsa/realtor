@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { HomeFilters, HomeResponseDTO } from './home.dto';
 import _ from 'lodash/fp';
 import { PropertyType } from '@prisma/client';
+import { UserInfo } from 'src/user/user.decorator';
 
 type CreateHomeParameters = {
   address: string;
@@ -155,5 +156,18 @@ export class HomeService {
 
     if (!home) throw new NotFoundException();
     return home.realtor;
+  }
+
+  async inquire(buyer: UserInfo, homeId: number, message: string) {
+    const realtor = await this.getRealtorByHomeId(homeId);
+
+    return await this.prismaService.message.create({
+      data: {
+        realtor_id: realtor.id,
+        buyer_id: buyer.id,
+        home_id: homeId,
+        message,
+      },
+    });
   }
 }

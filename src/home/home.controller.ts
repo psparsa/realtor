@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { CreateHomeDTO, UpdateHomeDTO } from './home.dto';
+import { CreateHomeDTO, InquireDTO, UpdateHomeDTO } from './home.dto';
 import { User, UserInfo } from 'src/user/user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { Roles } from 'src/roles.decorator';
@@ -73,5 +73,16 @@ export class HomeController {
     const realtor = await this.homeService.getRealtorByHomeId(id);
     if (realtor.id !== user.id) throw new UnauthorizedException();
     return this.homeService.deleteHomeById(id);
+  }
+
+  @Roles([UserType.BUYER])
+  @UseGuards(AuthGuard)
+  @Post('/inquire/:homeId')
+  inquire(
+    @Param('homeId', ParseIntPipe) homeId: number,
+    @User() user: UserInfo,
+    @Body() body: InquireDTO,
+  ) {
+    return this.homeService.inquire(user, homeId, body.message);
   }
 }
