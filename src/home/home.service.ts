@@ -15,6 +15,16 @@ type CreateHomeParameters = {
   images: Array<Record<'url', string>>;
 };
 
+type UpdateHomeParameters = {
+  address?: string;
+  city?: string;
+  landSize?: number;
+  numberOfBathrooms?: number;
+  numberOfBedrooms?: number;
+  price?: number;
+  propertyType?: PropertyType;
+};
+
 @Injectable()
 export class HomeService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -68,27 +78,46 @@ export class HomeService {
     throw new NotFoundException();
   }
 
-  async createHome(data: CreateHomeParameters) {
+  async createHome(parameters: CreateHomeParameters) {
     const home = await this.prismaService.home.create({
       data: {
-        address: data.address,
-        city: data.city,
-        land_size: data.landSize,
-        number_of_bathrooms: data.numberOfBathrooms,
-        number_of_bedrooms: data.numberOfBedrooms,
-        price: data.price,
-        propertyType: data.propertyType,
+        address: parameters.address,
+        city: parameters.city,
+        land_size: parameters.landSize,
+        number_of_bathrooms: parameters.numberOfBathrooms,
+        number_of_bedrooms: parameters.numberOfBedrooms,
+        price: parameters.price,
+        propertyType: parameters.propertyType,
         realtor_id: 10,
       },
     });
 
     const images = await this.prismaService.image.create({
       data: {
-        url: data.images[0].url,
+        url: parameters.images[0].url,
         home_id: home.id,
       },
     });
 
     return new HomeResponseDTO({ ...home, images: [{ url: images.url }] });
+  }
+
+  async updateHomeById(parameters: UpdateHomeParameters, id: number) {
+    const home = await this.prismaService.home.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!home) throw new NotFoundException();
+
+    const updatedHome = await this.prismaService.home.update({
+      where: {
+        id,
+      },
+      data: parameters,
+    });
+
+    return new HomeResponseDTO(updatedHome);
   }
 }

@@ -10,7 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { CreateHomeDTO } from './home.dto';
+import { CreateHomeDTO, UpdateHomeDTO } from './home.dto';
 
 @Controller('home')
 export class HomeController {
@@ -43,8 +43,11 @@ export class HomeController {
   }
 
   @Put(':id')
-  updateHome() {
-    return {};
+  updateHome(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateHomeDTO,
+  ) {
+    return this.homeService.updateHomeById(body, id);
   }
 
   @Delete(':id')
