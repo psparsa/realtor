@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDTO, UpdateHomeDTO } from './home.dto';
+import { User, UserType } from 'src/user/user.decorator';
 
 @Controller('home')
 export class HomeController {
@@ -38,8 +39,8 @@ export class HomeController {
   }
 
   @Post()
-  createHome(@Body() body: CreateHomeDTO) {
-    return this.homeService.createHome(body);
+  createHome(@Body() body: CreateHomeDTO, @User() user: UserType) {
+    return this.homeService.createHome(body, user.id);
   }
 
   @Put(':id')

@@ -78,7 +78,7 @@ export class HomeService {
     throw new NotFoundException();
   }
 
-  async createHome(parameters: CreateHomeParameters) {
+  async createHome(parameters: CreateHomeParameters, UserId: number) {
     const home = await this.prismaService.home.create({
       data: {
         address: parameters.address,
@@ -88,7 +88,7 @@ export class HomeService {
         number_of_bedrooms: parameters.numberOfBedrooms,
         price: parameters.price,
         propertyType: parameters.propertyType,
-        realtor_id: 10,
+        realtor_id: UserId,
       },
     });
 
