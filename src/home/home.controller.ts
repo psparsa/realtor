@@ -77,7 +77,7 @@ export class HomeController {
 
   @Roles([UserType.BUYER])
   @UseGuards(AuthGuard)
-  @Post('/inquire/:homeId')
+  @Post('/:homeId/inquire')
   inquire(
     @Param('homeId', ParseIntPipe) homeId: number,
     @User() user: UserInfo,
@@ -88,7 +88,7 @@ export class HomeController {
 
   @UseGuards(AuthGuard)
   @Roles([UserType.REALTOR])
-  @Get('/messages/:homeId')
+  @Get('/:homeId/messages')
   async getHomeMessages(
     @Param('homeId', ParseIntPipe) homeId: number,
     @User() user: UserInfo,
