@@ -1,9 +1,11 @@
 import { ConflictException, HttpException, Injectable } from '@nestjs/common';
-import { SignInDTO, SignUpDTO } from './auth.dto';
+import { SignInDTO } from './DTO/SignInDTO';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { UserType } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { SignUpDTO } from './DTO/SignUpDTO';
 
 @Injectable()
 export class AuthService {

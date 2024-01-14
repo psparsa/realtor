@@ -12,11 +12,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { CreateHomeDTO, InquireDTO, UpdateHomeDTO } from './home.dto';
+import { InquireDTO } from './DTO/InquireDTO';
 import { User, UserInfo } from 'src/user/user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { Roles } from 'src/roles.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
 import { UserType } from '@prisma/client';
+import { CreateHomeDTO } from './DTO/CreateHomeDTO';
+import { UpdateHomeDTO } from './DTO/UpdateHomeDTO';
 
 @Controller('home')
 export class HomeController {

@@ -1,9 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { HomeFilters, HomeResponseDTO } from './home.dto';
 import _ from 'lodash/fp';
 import { PropertyType } from '@prisma/client';
 import { UserInfo } from 'src/user/user.decorator';
+import { HomeDTO } from './DTO/HomeDTO';
+
+export type HomeFilters = {
+  city?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  propertyType?: string;
+};
 
 type CreateHomeParameters = {
   address: string;
@@ -30,7 +37,7 @@ type UpdateHomeParameters = {
 export class HomeService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getHomes(filters: HomeFilters): Promise<HomeResponseDTO[]> {
+  async getHomes(filters: HomeFilters): Promise<HomeDTO[]> {
     const omitNil = _.omitBy(_.isNil);
     const homes = await this.prismaService.home.findMany({
       select: {
@@ -65,7 +72,7 @@ export class HomeService {
 
     if (_.isEmpty(homes)) throw new NotFoundException();
 
-    return homes.map((home) => new HomeResponseDTO(home));
+    return homes.map((home) => new HomeDTO(home));
   }
 
   async getHome(id: number) {
@@ -100,7 +107,7 @@ export class HomeService {
       },
     });
 
-    return new HomeResponseDTO({ ...home, images: [{ url: images.url }] });
+    return new HomeDTO({ ...home, images: [{ url: images.url }] });
   }
 
   async updateHomeById(parameters: UpdateHomeParameters, id: number) {
@@ -119,7 +126,7 @@ export class HomeService {
       data: parameters,
     });
 
-    return new HomeResponseDTO(updatedHome);
+    return new HomeDTO(updatedHome);
   }
 
   async deleteHomeById(id: number) {

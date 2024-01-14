@@ -8,10 +8,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GenerateProductKeyDTO, SignInDTO, SignUpDTO } from './auth.dto';
+import { GenerateProductKeyDTO } from './DTO/GenerateProductKeyDTO';
 import { UserType } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { User, UserInfo } from '../user.decorator';
+import { SignUpDTO } from './DTO/SignUpDTO';
+import { SignInDTO } from './DTO/SignInDTO';
 
 @Controller('auth')
 export class AuthController {
