@@ -44,8 +44,6 @@ export class HomeService {
       }),
     });
 
-    if (_.isEmpty(homes)) throw new NotFoundException();
-
     return homes.map((home) => new HomeDTO(home));
   }
 
