@@ -1,43 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import _ from 'lodash/fp';
-import { PropertyType } from '@prisma/client';
 import { UserInfo } from 'src/user/user.decorator';
-import { HomeDTO } from './DTO/HomeDTO';
-
-export type HomeFilters = {
-  city?: string;
-  minPrice?: number;
-  maxPrice?: number;
-  propertyType?: string;
-};
-
-type CreateHomeParameters = {
-  address: string;
-  city: string;
-  landSize: number;
-  numberOfBathrooms: number;
-  numberOfBedrooms: number;
-  price: number;
-  propertyType: PropertyType;
-  images: Array<Record<'url', string>>;
-};
-
-type UpdateHomeParameters = {
-  address?: string;
-  city?: string;
-  landSize?: number;
-  numberOfBathrooms?: number;
-  numberOfBedrooms?: number;
-  price?: number;
-  propertyType?: PropertyType;
-};
+import { HomeDTO } from './dtos/home.dto';
+import { HomeFilterParameters } from './types/home-filter.parameters';
+import { CreateHomeParameters } from './types/create-home.parameters';
+import { UpdateHomeParameters } from './types/update-home.parameters';
+import _ from 'lodash/fp';
 
 @Injectable()
 export class HomeService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getHomes(filters: HomeFilters): Promise<HomeDTO[]> {
+  async getHomes(filters: HomeFilterParameters): Promise<HomeDTO[]> {
     const omitNil = _.omitBy(_.isNil);
     const homes = await this.prismaService.home.findMany({
       select: {
