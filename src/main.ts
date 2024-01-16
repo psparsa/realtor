@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { UnknownErrorFilter } from './utils/filters/unknown-error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,9 +12,11 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-      // disableErrorMessages: true,
     }),
   );
+
+  app.useGlobalFilters(new UnknownErrorFilter());
+
   await app.listen(3000);
 }
 bootstrap();

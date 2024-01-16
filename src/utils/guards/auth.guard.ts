@@ -39,8 +39,6 @@ export class AuthGuard implements CanActivate {
 
       if (!user) return false;
       return roles.includes(user.userType);
-
-      return true;
     } catch (_) {
       return false;
     }
