@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { generateErrorResponse } from '../generateErrorResponse/generateErrorResponse';
+import { generateErrorResponse } from 'src/utils/generate-error-response/generate-error-response';
 
 @Catch()
 export class UnknownErrorFilter implements ExceptionFilter {

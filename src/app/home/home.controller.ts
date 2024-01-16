@@ -12,8 +12,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { User, UserInfo } from 'src/user/user.decorator';
-import { AuthGuard } from 'src/utils/guards/auth.guard';
+import { User, UserInfo } from 'src/app/user/user.decorator';
+import { AuthGuard } from 'src/app/user/auth/auth.guard';
 import { Roles } from 'src/utils/decorators/roles.decorator';
 import { UserType } from '@prisma/client';
 

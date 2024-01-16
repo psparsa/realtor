@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { UserInfo } from 'src/user/user.decorator';
+import { PrismaService } from 'src/app/prisma/prisma.service';
+import { UserInfo } from 'src/app/user/user.decorator';
 import { HomeDTO } from './dtos/home.dto';
 import { HomeFilterParameters } from './types/home-filter.parameters';
 import { CreateHomeParameters } from './types/create-home.parameters';
