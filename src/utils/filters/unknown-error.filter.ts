@@ -6,11 +6,14 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { generateErrorResponse } from 'src/utils/generate-error-response/generate-error-response';
+import { I18nContext } from 'nestjs-i18n';
+import { I18nTranslations } from 'src/i18n/i18n.generated';
+import { generateErrorResponse } from 'src/utils/generate-error-response';
 
 @Catch()
 export class UnknownErrorFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
+    const i18n = I18nContext.current<I18nTranslations>();
     const context = host.switchToHttp();
     const response = context.getResponse<Response>();
     const isHttpException = exception instanceof HttpException;
@@ -20,8 +23,7 @@ export class UnknownErrorFilter implements ExceptionFilter {
     } else {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         generateErrorResponse({
-          message:
-            'Oops! Something went wrong on our end. We are working to fix it. Please try again later.',
+          message: i18n.t('errors.unknown-server-error'),
         }),
       );
     }
