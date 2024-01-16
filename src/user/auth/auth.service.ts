@@ -5,6 +5,7 @@ import { UserType } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { SignUpParameters } from './types/signup.parameters';
 import { SignInParameters } from './types/signin.parameters';
+import { ValidateProductKeyParameters } from './types/validate-product-key.parameters';
 
 @Injectable()
 export class AuthService {
@@ -72,5 +73,11 @@ export class AuthService {
   async generateProductKey(email: string, userType: UserType) {
     const str = `${email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
     return bcrypt.hash(str, 10);
+  }
+
+  validateProductKey(parameters: ValidateProductKeyParameters) {
+    const validProductKey = `${parameters.email}-${parameters.userType}-${process.env.PRODUCT_KEY_SECRET}`;
+
+    return bcrypt.compareSync(validProductKey, parameters.productKey);
   }
 }

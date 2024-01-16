@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserType } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
 import { User, UserInfo } from '../user.decorator';
 import { GenerateProductKeyDTO } from './dtos/generate-product-key.dto';
 import { SignUpDTO } from './dtos/signup.dto';
@@ -24,20 +23,17 @@ export class AuthController {
     @Body() body: SignUpDTO,
     @Param('userType', new ParseEnumPipe(UserType)) userType: UserType,
   ) {
-    if (userType !== UserType.BUYER) {
-      if (!body.productKey) throw new UnauthorizedException();
+    if (userType == UserType.BUYER) this.authService.signup(body, userType);
 
-      const validProductKey = `${body.email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
+    if (!body.productKey) throw new UnauthorizedException();
 
-      const isValidProductKey = bcrypt.compareSync(
-        validProductKey,
-        body.productKey,
-      );
+    const isProductKeyValid = this.authService.validateProductKey({
+      email: body.email,
+      productKey: body.productKey,
+      userType,
+    });
 
-      if (!isValidProductKey) throw new UnauthorizedException();
-    }
-
-    return this.authService.signup(body, userType);
+    if (!isProductKeyValid) throw new UnauthorizedException();
   }
 
   @Post('/signin')
