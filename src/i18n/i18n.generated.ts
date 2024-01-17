@@ -4,6 +4,9 @@ import { Path } from "nestjs-i18n";
 export type I18nTranslations = {
     "errors": {
         "unknown-server-error": string;
+        "provide-token": string;
+        "provide-valid-token": string;
+        "only-realtors": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;

@@ -19,7 +19,7 @@ export class UnknownErrorFilter implements ExceptionFilter {
     const isHttpException = exception instanceof HttpException;
 
     if (isHttpException) {
-      response.send(exception.getResponse());
+      response.status(exception.getStatus()).json(exception.getResponse());
     } else {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
         generateErrorResponse({
