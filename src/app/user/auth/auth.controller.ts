@@ -23,17 +23,19 @@ export class AuthController {
     @Body() body: SignUpDTO,
     @Param('userType', new ParseEnumPipe(UserType)) userType: UserType,
   ) {
-    if (userType == UserType.BUYER) this.authService.signup(body, userType);
+    if (userType !== UserType.BUYER) {
+      if (!body.productKey) throw new UnauthorizedException();
 
-    if (!body.productKey) throw new UnauthorizedException();
+      const isProductKeyValid = this.authService.validateProductKey({
+        email: body.email,
+        productKey: body.productKey,
+        userType,
+      });
 
-    const isProductKeyValid = this.authService.validateProductKey({
-      email: body.email,
-      productKey: body.productKey,
-      userType,
-    });
+      if (!isProductKeyValid) throw new UnauthorizedException();
+    }
 
-    if (!isProductKeyValid) throw new UnauthorizedException();
+    return this.authService.signup(body, userType);
   }
 
   @Post('/signin')
