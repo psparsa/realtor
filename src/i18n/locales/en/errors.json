@@ -2,5 +2,9 @@
   "unknown-server-error": "Oops! Something went wrong on our end.",
   "provide-token": "Please provide your token to access this endpoint.",
   "provide-valid-token": "Your token is invalid or expired.",
-  "only-realtors": "Only users with the 'realtor' role are allowed to access this endpoint."
+  "only-realtors": "Only users with the 'realtor' role are allowed to access this endpoint.",
+  "product-key": {
+    "missing": "Product key is missing",
+    "invalid": "Provided Product key is invalid"
+  }
 }

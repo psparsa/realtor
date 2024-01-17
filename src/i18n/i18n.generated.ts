@@ -7,6 +7,10 @@ export type I18nTranslations = {
         "provide-token": string;
         "provide-valid-token": string;
         "only-realtors": string;
+        "product-key": {
+            "missing": string;
+            "invalid": string;
+        };
     };
 };
 export type I18nPath = Path<I18nTranslations>;

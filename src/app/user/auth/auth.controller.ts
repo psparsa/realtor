@@ -1,11 +1,12 @@
 import {
+  BadRequestException,
   Body,
   Controller,
+  ForbiddenException,
   Get,
   Param,
   ParseEnumPipe,
   Post,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserType } from '@prisma/client';
@@ -13,6 +14,9 @@ import { User, UserInfo } from '../user.decorator';
 import { GenerateProductKeyDTO } from './dtos/generate-product-key.dto';
 import { SignUpDTO } from './dtos/signup.dto';
 import { SignInDTO } from './dtos/signin.dto';
+import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { I18nTranslations } from 'src/i18n/i18n.generated';
 
 @Controller('auth')
 export class AuthController {
@@ -20,11 +24,20 @@ export class AuthController {
 
   @Post('/signup/:userType')
   async signup(
+    @I18n() i18n: I18nContext<I18nTranslations>,
     @Body() body: SignUpDTO,
     @Param('userType', new ParseEnumPipe(UserType)) userType: UserType,
   ) {
     if (userType !== UserType.BUYER) {
-      if (!body.productKey) throw new UnauthorizedException();
+      if (!body.productKey)
+        throw new BadRequestException(
+          generateErrorResponse({
+            message: i18n.t('errors.product-key.missing'),
+            fields: {
+              productKey: i18n.t('errors.product-key.missing'),
+            },
+          }),
+        );
 
       const isProductKeyValid = this.authService.validateProductKey({
         email: body.email,
@@ -32,7 +45,15 @@ export class AuthController {
         userType,
       });
 
-      if (!isProductKeyValid) throw new UnauthorizedException();
+      if (!isProductKeyValid)
+        throw new ForbiddenException(
+          generateErrorResponse({
+            message: i18n.t('errors.product-key.invalid'),
+            fields: {
+              productKey: i18n.t('errors.product-key.invalid'),
+            },
+          }),
+        );
     }
 
     return this.authService.signup(body, userType);
