@@ -1,3 +1,13 @@
 {
-  "unknown-server-error": "Hoppla! Auf unserer Seite ist etwas schiefgelaufen."
+  "unknown-server-error": "Hoppla! Auf unserer Seite ist etwas schiefgelaufen.",
+  "provide-token": "Bitte geben Sie Ihren Token an, um auf diesen Endpunkt zuzugreifen.",
+  "provide-valid-token": "Ihr Token ist ungültig oder abgelaufen.",
+  "do-not-have-required-role": "Nur Benutzer mit den Rollen {roles} dürfen diesen Endpunkt verwenden.",
+  "product-key-missing": "Produktschlüssel fehlt.",
+  "product-key-invalid": "Der bereitgestellte Produktschlüssel ist ungültig.",
+  "home-not-found": "Haus mit ID {id} nicht gefunden.",
+  "home-is-not-yours": "Dieses Haus gehört Ihnen nicht.",
+  "email-taken": "E-Mail-Adresse ist bereits in Verwendung. Bitte wählen Sie eine andere.",
+  "user-not-found": "Kein Benutzer mit der E-Mail-Adresse {email} gefunden.",
+  "incorrect-password": "Das eingegebene Passwort ist falsch."
 }
