@@ -7,6 +7,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
 
   app:
+    environment:
+      DATABASE_URL: mysql://root:root@mysql:3306/realtor 
     container_name: app
     build:
       dockerfile: Dockerfile.dev
