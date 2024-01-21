@@ -6,5 +6,8 @@
   "product-key-missing": "Product key is missing.",
   "product-key-invalid": "Provided Product key is invalid.",
   "home-not-found": "Home with ID {id} not found.",
-  "home-is-not-yours": "This home doesn't belong to you."
+  "home-is-not-yours": "This home doesn't belong to you.",
+  "email-taken": "Email is already in use. Please choose another.",
+  "user-not-found": "No user found with the email address {email}.",
+  "incorrect-password": "The entered password is incorrect."
 }

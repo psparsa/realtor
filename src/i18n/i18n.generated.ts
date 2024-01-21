@@ -11,6 +11,9 @@ export type I18nTranslations = {
         "product-key-invalid": string;
         "home-not-found": string;
         "home-is-not-yours": string;
+        "email-taken": string;
+        "user-not-found": string;
+        "incorrect-password": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;

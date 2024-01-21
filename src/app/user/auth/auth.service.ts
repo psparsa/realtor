@@ -1,4 +1,8 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { PrismaService } from 'src/app/prisma/prisma.service';
 import * as bcrypt from 'bcryptjs';
 import { UserType } from '@prisma/client';
@@ -6,10 +10,16 @@ import jwt from 'jsonwebtoken';
 import { SignUpParameters } from './types/signup.parameters';
 import { SignInParameters } from './types/signin.parameters';
 import { ValidateProductKeyParameters } from './types/validate-product-key.parameters';
+import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { I18nService } from 'nestjs-i18n';
+import { I18nTranslations } from 'src/i18n/i18n.generated';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly i18n: I18nService<I18nTranslations>,
+  ) {}
 
   generateToken(name: string, id: number) {
     return jwt.sign(
@@ -32,7 +42,12 @@ export class AuthService {
       },
     }));
 
-    if (userExists) throw new ConflictException();
+    if (userExists)
+      throw new ConflictException(
+        generateErrorResponse({
+          message: this.i18n.t('errors.email-taken'),
+        }),
+      );
 
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
@@ -59,11 +74,25 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new HttpException("User didn't found!", 400);
+    if (!user)
+      throw new BadRequestException(
+        generateErrorResponse({
+          message: this.i18n.t('errors.user-not-found', {
+            args: {
+              email,
+            },
+          }),
+        }),
+      );
 
     const hashedPassword = user.password;
     const isValidPassword = await bcrypt.compare(password, hashedPassword);
-    if (!isValidPassword) throw new HttpException('Invalid credentials!', 400);
+    if (!isValidPassword)
+      throw new BadRequestException(
+        generateErrorResponse({
+          message: this.i18n.t('errors.incorrect-password'),
+        }),
+      );
 
     return {
       token: this.generateToken(user.name, user.id),
