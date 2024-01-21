@@ -6,10 +6,28 @@ import { HomeFilterParameters } from './types/home-filter.parameters';
 import { CreateHomeParameters } from './types/create-home.parameters';
 import { UpdateHomeParameters } from './types/update-home.parameters';
 import _ from 'lodash/fp';
+import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { I18nService } from 'nestjs-i18n';
+import { I18nTranslations } from 'src/i18n/i18n.generated';
 
 @Injectable()
 export class HomeService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly i18n: I18nService<I18nTranslations>,
+  ) {}
+
+  private getHomeNotFoundException(id: number) {
+    return new NotFoundException(
+      generateErrorResponse({
+        message: this.i18n.t('errors.home-not-found', {
+          args: {
+            id,
+          },
+        }),
+      }),
+    );
+  }
 
   async getHomes(filters: HomeFilterParameters): Promise<HomeDTO[]> {
     const omitNil = _.omitBy(_.isNil);
@@ -55,7 +73,7 @@ export class HomeService {
     });
 
     if (home) return home;
-    throw new NotFoundException();
+    throw this.getHomeNotFoundException(id);
   }
 
   async createHome(parameters: CreateHomeParameters, UserId: number) {
@@ -89,7 +107,7 @@ export class HomeService {
       },
     });
 
-    if (!home) throw new NotFoundException();
+    if (!home) throw this.getHomeNotFoundException(id);
 
     const updatedHome = await this.prismaService.home.update({
       where: {
@@ -108,7 +126,7 @@ export class HomeService {
       },
     });
 
-    if (!home) throw new NotFoundException();
+    if (!home) throw this.getHomeNotFoundException(id);
 
     await this.prismaService.image.deleteMany({
       where: {
@@ -133,7 +151,7 @@ export class HomeService {
       },
     });
 
-    if (!home) throw new NotFoundException();
+    if (!home) throw this.getHomeNotFoundException(id);
     return home.realtor;
   }
 

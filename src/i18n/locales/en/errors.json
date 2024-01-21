@@ -4,7 +4,8 @@
   "provide-valid-token": "Your token is invalid or expired.",
   "only-realtors": "Only users with the 'realtor' role are allowed to access this endpoint.",
   "product-key": {
-    "missing": "Product key is missing",
-    "invalid": "Provided Product key is invalid"
-  }
+    "missing": "Product key is missing.",
+    "invalid": "Provided Product key is invalid."
+  },
+  "home-not-found": "Home with ID {id} not found."
 }

@@ -11,6 +11,7 @@ export type I18nTranslations = {
             "missing": string;
             "invalid": string;
         };
+        "home-not-found": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;
