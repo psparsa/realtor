@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  app:
+    container_name: app
+    build:
+      dockerfile: Dockerfile.dev
+    command: /bin/sh /app/start.sh
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+    ports:
+      - '3000:3000'
+      - '5555:5555'
+    depends_on:
+      - mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - '8080:80'
+    depends_on:
+      - mysql
