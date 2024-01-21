@@ -2,10 +2,9 @@
   "unknown-server-error": "Oops! Something went wrong on our end.",
   "provide-token": "Please provide your token to access this endpoint.",
   "provide-valid-token": "Your token is invalid or expired.",
-  "only-realtors": "Only users with the 'realtor' role are allowed to access this endpoint.",
-  "product-key": {
-    "missing": "Product key is missing.",
-    "invalid": "Provided Product key is invalid."
-  },
-  "home-not-found": "Home with ID {id} not found."
+  "do-not-have-required-role": "Only user(s) with the {roles} role(s) are allowed to access this endpoint.",
+  "product-key-missing": "Product key is missing.",
+  "product-key-invalid": "Provided Product key is invalid.",
+  "home-not-found": "Home with ID {id} not found.",
+  "home-is-not-yours": "This home doesn't belong to you."
 }

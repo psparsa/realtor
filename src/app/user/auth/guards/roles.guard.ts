@@ -13,7 +13,7 @@ import { PrismaService } from 'src/app/prisma/prisma.service';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 import { I18nContext } from 'nestjs-i18n';
 import { generateErrorResponse } from 'src/utils/generate-error-response';
-import { User } from '@prisma/client';
+import { User, UserType } from '@prisma/client';
 
 interface JWTPayload {
   name: string;
@@ -31,7 +31,7 @@ export class RolesGuard implements CanActivate {
     const i18n = I18nContext.current<I18nTranslations>();
     const roles = this.reflactor.getAllAndOverride('roles', [
       context.getHandler(),
-    ]);
+    ]) as UserType[];
     if (_.isEmpty(roles)) return true;
 
     const request = context.switchToHttp().getRequest();
@@ -70,7 +70,11 @@ export class RolesGuard implements CanActivate {
     if (!hasTheSpecifiedRole)
       throw new ForbiddenException(
         generateErrorResponse({
-          message: i18n.t('errors.only-realtors'),
+          message: i18n.t('errors.do-not-have-required-role', {
+            args: {
+              roles: roles.join(', '),
+            },
+          }),
         }),
       );
 

@@ -6,12 +6,11 @@ export type I18nTranslations = {
         "unknown-server-error": string;
         "provide-token": string;
         "provide-valid-token": string;
-        "only-realtors": string;
-        "product-key": {
-            "missing": string;
-            "invalid": string;
-        };
+        "do-not-have-required-role": string;
+        "product-key-missing": string;
+        "product-key-invalid": string;
         "home-not-found": string;
+        "home-is-not-yours": string;
     };
 };
 export type I18nPath = Path<I18nTranslations>;

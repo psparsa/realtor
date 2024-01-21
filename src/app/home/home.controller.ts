@@ -20,10 +20,22 @@ import { CreateHomeDTO } from './dtos/create-home.dto';
 import { UpdateHomeDTO } from './dtos/update-home.dto';
 import { InquireDTO } from './dtos/inquire.dto';
 import { RolesGuard } from '../user/auth/guards/roles.guard';
+import { I18nService } from 'nestjs-i18n';
+import { I18nTranslations } from 'src/i18n/i18n.generated';
+import { generateErrorResponse } from 'src/utils/generate-error-response';
 
 @Controller('home')
 export class HomeController {
-  constructor(private readonly homeService: HomeService) {}
+  constructor(
+    private readonly homeService: HomeService,
+    private readonly i18n: I18nService<I18nTranslations>,
+  ) {}
+
+  private readonly homeIsNotYoursException = new UnauthorizedException(
+    generateErrorResponse({
+      message: this.i18n.t('errors.home-is-not-yours'),
+    }),
+  );
 
   @Get()
   getHomes(
@@ -62,7 +74,8 @@ export class HomeController {
     @User() user: UserInfo,
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
-    if (realtor.id !== user.id) throw new UnauthorizedException();
+    if (realtor.id !== user.id) throw this.homeIsNotYoursException;
+
     return this.homeService.updateHomeById(body, id);
   }
 
@@ -74,7 +87,7 @@ export class HomeController {
     @User() user: UserInfo,
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
-    if (realtor.id !== user.id) throw new UnauthorizedException();
+    if (realtor.id !== user.id) throw this.homeIsNotYoursException;
     return this.homeService.deleteHomeById(id);
   }
 
@@ -97,8 +110,7 @@ export class HomeController {
     @User() user: UserInfo,
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(homeId);
-    if (!realtor) throw new Error('What?!');
-    if (realtor.id !== user.id) throw new UnauthorizedException();
+    if (realtor.id !== user.id) throw this.homeIsNotYoursException;
 
     return this.homeService.getMessagesByHome(homeId);
   }

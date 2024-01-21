@@ -32,9 +32,9 @@ export class AuthController {
       if (!body.productKey)
         throw new BadRequestException(
           generateErrorResponse({
-            message: i18n.t('errors.product-key.missing'),
+            message: i18n.t('errors.product-key-missing'),
             fields: {
-              productKey: i18n.t('errors.product-key.missing'),
+              productKey: i18n.t('errors.product-key-missing'),
             },
           }),
         );
@@ -48,9 +48,9 @@ export class AuthController {
       if (!isProductKeyValid)
         throw new ForbiddenException(
           generateErrorResponse({
-            message: i18n.t('errors.product-key.invalid'),
+            message: i18n.t('errors.product-key-invalid'),
             fields: {
-              productKey: i18n.t('errors.product-key.invalid'),
+              productKey: i18n.t('errors.product-key-invalid'),
             },
           }),
         );
