@@ -22,7 +22,7 @@ import { InquireDTO } from './dtos/inquire.dto';
 import { RolesGuard } from '../user/auth/guards/roles.guard';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
-import { errorResponse } from 'src/utils/response';
+import { errorResponse, successResponse } from 'src/utils/response';
 
 @Controller('home')
 export class HomeController {
@@ -38,31 +38,40 @@ export class HomeController {
   );
 
   @Get()
-  getHomes(
+  async getHomes(
     @Query('city')
     city?: string,
     @Query('minPrice') minPrice?: string,
     @Query('maxPrice') maxPrice?: string,
     @Query('propertyType') propertyType?: string,
   ) {
-    return this.homeService.getHomes({
+    const data = await this.homeService.getHomes({
       city,
       maxPrice: maxPrice ? parseFloat(maxPrice) : undefined,
       minPrice: minPrice ? parseFloat(minPrice) : undefined,
       propertyType,
     });
+
+    return successResponse({
+      data,
+    });
   }
 
   @Get(':id')
-  getHome(@Param('id', ParseIntPipe) id: number) {
-    return this.homeService.getHome(id);
+  async getHome(@Param('id', ParseIntPipe) id: number) {
+    const data = await this.homeService.getHome(id);
+    return successResponse({ data });
   }
 
   @Roles([UserType.REALTOR])
   @UseGuards(RolesGuard)
   @Post()
-  createHome(@Body() body: CreateHomeDTO, @User() user: UserInfo) {
-    return this.homeService.createHome(body, user.id);
+  async createHome(@Body() body: CreateHomeDTO, @User() user: UserInfo) {
+    const data = await this.homeService.createHome(body, user.id);
+
+    return successResponse({
+      data,
+    });
   }
 
   @Roles([UserType.REALTOR])
@@ -76,7 +85,8 @@ export class HomeController {
     const realtor = await this.homeService.getRealtorByHomeId(id);
     if (realtor.id !== user.id) throw this.homeIsNotYoursException;
 
-    return this.homeService.updateHomeById(body, id);
+    const data = await this.homeService.updateHomeById(body, id);
+    return successResponse({ data });
   }
 
   @Roles([UserType.REALTOR, UserType.ADMIN])
@@ -88,18 +98,22 @@ export class HomeController {
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
     if (realtor.id !== user.id) throw this.homeIsNotYoursException;
-    return this.homeService.deleteHomeById(id);
+    const data = await this.homeService.deleteHomeById(id);
+    return successResponse({ data });
   }
 
   @Roles([UserType.BUYER])
   @UseGuards(RolesGuard)
   @Post('/:homeId/inquire')
-  inquire(
+  async inquire(
     @Param('homeId', ParseIntPipe) homeId: number,
     @User() user: UserInfo,
     @Body() body: InquireDTO,
   ) {
-    return this.homeService.inquire(user, homeId, body.message);
+    const data = await this.homeService.inquire(user, homeId, body.message);
+    return successResponse({
+      data,
+    });
   }
 
   @Roles([UserType.REALTOR])
@@ -111,7 +125,9 @@ export class HomeController {
   ) {
     const realtor = await this.homeService.getRealtorByHomeId(homeId);
     if (realtor.id !== user.id) throw this.homeIsNotYoursException;
-
-    return this.homeService.getMessagesByHome(homeId);
+    const data = this.homeService.getMessagesByHome(homeId);
+    return successResponse({
+      data,
+    });
   }
 }

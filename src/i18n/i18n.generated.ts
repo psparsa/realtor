@@ -15,5 +15,10 @@ export type I18nTranslations = {
         "user-not-found": string;
         "incorrect-password": string;
     };
+    "messages": {
+        "success-signup": string;
+        "success-signin": string;
+        "product-key-generated": string;
+    };
 };
 export type I18nPath = Path<I18nTranslations>;
