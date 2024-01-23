@@ -6,7 +6,7 @@ import { HomeFilterParameters } from './types/home-filter.parameters';
 import { CreateHomeParameters } from './types/create-home.parameters';
 import { UpdateHomeParameters } from './types/update-home.parameters';
 import _ from 'lodash/fp';
-import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { errorResponse } from 'src/utils/response';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 
@@ -19,7 +19,7 @@ export class HomeService {
 
   private getHomeNotFoundException(id: number) {
     return new NotFoundException(
-      generateErrorResponse({
+      errorResponse({
         message: this.i18n.t('errors.home-not-found', {
           args: {
             id,

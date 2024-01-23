@@ -22,7 +22,7 @@ import { InquireDTO } from './dtos/inquire.dto';
 import { RolesGuard } from '../user/auth/guards/roles.guard';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
-import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { errorResponse } from 'src/utils/response';
 
 @Controller('home')
 export class HomeController {
@@ -32,7 +32,7 @@ export class HomeController {
   ) {}
 
   private readonly homeIsNotYoursException = new UnauthorizedException(
-    generateErrorResponse({
+    errorResponse({
       message: this.i18n.t('errors.home-is-not-yours'),
     }),
   );

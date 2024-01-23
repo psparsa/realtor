@@ -14,7 +14,7 @@ import { User, UserInfo } from '../user.decorator';
 import { GenerateProductKeyDTO } from './dtos/generate-product-key.dto';
 import { SignUpDTO } from './dtos/signup.dto';
 import { SignInDTO } from './dtos/signin.dto';
-import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { errorResponse } from 'src/utils/response';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 
@@ -31,11 +31,14 @@ export class AuthController {
     if (userType !== UserType.BUYER) {
       if (!body.productKey)
         throw new BadRequestException(
-          generateErrorResponse({
+          errorResponse({
             message: i18n.t('errors.product-key-missing'),
-            fields: {
-              productKey: i18n.t('errors.product-key-missing'),
-            },
+            errors: [
+              {
+                message: i18n.t('errors.product-key-missing'),
+                field: 'productKey',
+              },
+            ],
           }),
         );
 
@@ -47,11 +50,14 @@ export class AuthController {
 
       if (!isProductKeyValid)
         throw new ForbiddenException(
-          generateErrorResponse({
+          errorResponse({
             message: i18n.t('errors.product-key-invalid'),
-            fields: {
-              productKey: i18n.t('errors.product-key-invalid'),
-            },
+            errors: [
+              {
+                message: i18n.t('errors.product-key-invalid'),
+                field: 'productKey',
+              },
+            ],
           }),
         );
     }

@@ -8,7 +8,7 @@ import {
 import { Response } from 'express';
 import { I18nContext } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
-import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { errorResponse } from 'src/utils/response';
 
 @Catch()
 export class UnknownErrorFilter implements ExceptionFilter {
@@ -22,7 +22,7 @@ export class UnknownErrorFilter implements ExceptionFilter {
       response.status(exception.getStatus()).json(exception.getResponse());
     } else {
       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(
-        generateErrorResponse({
+        errorResponse({
           message: i18n.t('errors.unknown-server-error'),
         }),
       );

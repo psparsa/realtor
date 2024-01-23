@@ -12,7 +12,7 @@ import * as jwt from 'jsonwebtoken';
 import { PrismaService } from 'src/app/prisma/prisma.service';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 import { I18nContext } from 'nestjs-i18n';
-import { generateErrorResponse } from 'src/utils/generate-error-response';
+import { errorResponse } from 'src/utils/response';
 import { User, UserType } from '@prisma/client';
 
 interface JWTPayload {
@@ -39,7 +39,7 @@ export class RolesGuard implements CanActivate {
 
     if (!token)
       throw new UnauthorizedException(
-        generateErrorResponse({
+        errorResponse({
           message: i18n.t('errors.provide-token'),
         }),
       );
@@ -60,7 +60,7 @@ export class RolesGuard implements CanActivate {
       if (!user) throw Error('');
     } catch (_) {
       throw new BadRequestException(
-        generateErrorResponse({
+        errorResponse({
           message: i18n.t('errors.provide-valid-token'),
         }),
       );
@@ -69,7 +69,7 @@ export class RolesGuard implements CanActivate {
     const hasTheSpecifiedRole = roles.includes(user.userType);
     if (!hasTheSpecifiedRole)
       throw new ForbiddenException(
-        generateErrorResponse({
+        errorResponse({
           message: i18n.t('errors.do-not-have-required-role', {
             args: {
               roles: roles.join(', '),
