@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 import { SignUpParameters } from './types/signup.parameters';
 import { SignInParameters } from './types/signin.parameters';
 import { ValidateProductKeyParameters } from './types/validate-product-key.parameters';
-import { errorResponse } from 'src/utils/response';
+import { formatErrorResponse } from 'src/utils/formatResponse';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 
@@ -44,7 +44,7 @@ export class AuthService {
 
     if (userExists)
       throw new ConflictException(
-        errorResponse({
+        formatErrorResponse({
           message: this.i18n.t('errors.email-taken'),
         }),
       );
@@ -76,7 +76,7 @@ export class AuthService {
 
     if (!user)
       throw new BadRequestException(
-        errorResponse({
+        formatErrorResponse({
           message: this.i18n.t('errors.user-not-found', {
             args: {
               email,
@@ -89,7 +89,7 @@ export class AuthService {
     const isValidPassword = await bcrypt.compare(password, hashedPassword);
     if (!isValidPassword)
       throw new BadRequestException(
-        errorResponse({
+        formatErrorResponse({
           message: this.i18n.t('errors.incorrect-password'),
         }),
       );

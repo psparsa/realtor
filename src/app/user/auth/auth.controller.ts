@@ -14,7 +14,10 @@ import { User, UserInfo } from '../user.decorator';
 import { GenerateProductKeyDTO } from './dtos/generate-product-key.dto';
 import { SignUpDTO } from './dtos/signup.dto';
 import { SignInDTO } from './dtos/signin.dto';
-import { errorResponse, successResponse } from 'src/utils/response';
+import {
+  formatErrorResponse,
+  formatSuccessResponse,
+} from 'src/utils/formatResponse';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
 
@@ -33,7 +36,7 @@ export class AuthController {
     if (userType !== UserType.BUYER) {
       if (!body.productKey)
         throw new BadRequestException(
-          errorResponse({
+          formatErrorResponse({
             message: this.i18n.t('errors.product-key-missing'),
             errors: [
               {
@@ -52,7 +55,7 @@ export class AuthController {
 
       if (!isProductKeyValid)
         throw new ForbiddenException(
-          errorResponse({
+          formatErrorResponse({
             message: this.i18n.t('errors.product-key-invalid'),
             errors: [
               {
@@ -65,7 +68,7 @@ export class AuthController {
     }
 
     const data = await this.authService.signup(body, userType);
-    return successResponse({
+    return formatSuccessResponse({
       message: this.i18n.t('messages.success-signup'),
       data,
     });
@@ -74,7 +77,7 @@ export class AuthController {
   @Post('/signin')
   async signin(@Body() body: SignInDTO) {
     const data = await this.authService.signin(body);
-    return successResponse({
+    return formatSuccessResponse({
       message: this.i18n.t('messages.success-signin'),
       data,
     });
@@ -87,7 +90,7 @@ export class AuthController {
       body.userType,
     );
 
-    return successResponse({
+    return formatSuccessResponse({
       message: this.i18n.t('messages.product-key-generated'),
       data,
     });
@@ -95,7 +98,7 @@ export class AuthController {
 
   @Get('/me')
   me(@User() user: UserInfo) {
-    return successResponse({
+    return formatSuccessResponse({
       data: user,
     });
   }
