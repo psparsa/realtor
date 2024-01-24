@@ -4,9 +4,11 @@ import {
   Controller,
   ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   ParseEnumPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserType } from '@prisma/client';
@@ -20,6 +22,8 @@ import {
 } from 'src/utils/formatResponse';
 import { I18nService } from 'nestjs-i18n';
 import { I18nTranslations } from 'src/i18n/i18n.generated';
+import { UserDTO } from './dtos/user.dto';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -97,9 +101,18 @@ export class AuthController {
   }
 
   @Get('/me')
-  me(@User() user: UserInfo) {
+  @UseGuards(AuthGuard)
+  async me(@User() user: UserInfo) {
+    const data = await this.authService.getUser(user.id);
+    if (!data)
+      throw new NotFoundException(
+        formatErrorResponse({
+          message: this.i18n.t('errors.provide-valid-token'),
+        }),
+      );
+
     return formatSuccessResponse({
-      data: user,
+      data: new UserDTO(data),
     });
   }
 }
